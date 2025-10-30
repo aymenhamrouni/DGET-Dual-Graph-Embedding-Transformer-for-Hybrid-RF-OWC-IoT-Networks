@@ -10,6 +10,13 @@ The framework integrates:
 - A **Mixed-Integer Nonlinear Programming (MINLP)** optimization core that generates labeled scheduling datasets under realistic energy and link constraints.  
 - A **supervised multi-task deep learning model** combining transductive and inductive Graph Neural Networks (GNNs) with a Transformer encoder to learn **temporal generalization** and **cross-link prediction**.
 
+
+> **For more information about the MINLP formulation**, its objectives, and constraint design,  
+> please refer to our previous repository and paper:  
+> - **Code:** [Hybrid RF–OWC AoI Optimization Repository](https://github.com/aymenhamrouni/hybrid-rf-woc-aoi-optimization)  
+> - **Paper:** > Hamrouni, A., Pollin, S., & Sallouha, H. (2024). AoI in Context-Aware Hybrid Radio-Optical IoT Networks. In *2024 IEEE Global Communications Conference (GLOBECOM)* (pp. 1966-1972). IEEE. DOI: [10.1109/GLOBECOM52923.2024.10901639](https://doi.org/10.1109/GLOBECOM52923.2024.10901639) 
+
+
 ---
 
 ## System Pipeline
@@ -53,10 +60,6 @@ The framework integrates:
   - *Classification loss* — cross-entropy with class weighting  
   - *Consistency loss* — mean squared alignment of transductive and inductive embeddings  
 - **Augmented edge labeling** and **weighted penalties** mitigate class imbalance.  
-- **Final objective:**
-  \[
-  \mathcal{L} = \mathcal{L}_{classification} + \lambda \mathcal{L}_{consistency}
-  \]
 
 ---
 
@@ -130,9 +133,6 @@ pip install -r requirements.txt
   - `Label` derives from feasibility/selection combinations and is used as the training target
 
 
-
-.
-
 - `docplex` installs from pip. For large scenarios or exact solving, install IBM CPLEX and set environment variables; otherwise small/medium runs can proceed with community behavior. The community docplex package supports only small instances.
 For large-scale or exact runs, install the IBM ILOG CPLEX Optimization Studio (academic version) and set:
   export CPLEX_STUDIO_DIR=/path/to/cplex
@@ -146,6 +146,11 @@ For large-scale or exact runs, install the IBM ILOG CPLEX Optimization Studio (a
 3. Commit changes with clear messages: `git commit -m "feat: add awesome feature"`
 4. Push the branch: `git push origin feature/awesome-feature`
 5. Open a Pull Request describing the motivation, approach, and tests/plots if relevant
+
+
+## License
+
+This code is provided for research purposes only. All rights reserved. Any use of this code must include proper citation of the original paper.
 
 
 ## Contact
