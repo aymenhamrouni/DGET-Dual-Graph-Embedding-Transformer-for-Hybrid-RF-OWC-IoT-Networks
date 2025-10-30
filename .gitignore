@@ -132,7 +132,7 @@ dmypy.json
 
 # Project specific
 *.pdf
-*.png
+# *.png
 *.jpg
 *.jpeg
 *.eps
@@ -140,7 +140,7 @@ dmypy.json
 *.tikz
 *.pgf
 *.tex
-
+DGET.py
 # Data files (uncomment if you want to ignore data)
 # data/
 # results/
