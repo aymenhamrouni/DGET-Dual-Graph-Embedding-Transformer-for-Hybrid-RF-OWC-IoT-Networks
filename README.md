@@ -4,6 +4,7 @@
 This repository provides the implementation accompanying the paper:  
 <p align="center"> “Resource Allocation in Hybrid Radio-Optical IoT Networks using GNN with Multi-task Learning.”</em>
 </p>
+
 It implements the **Dual-Graph Embedding with Transformer (DGET)** framework for ressource allocation in a **hybrid Radio Frequency (RF)** and **Optical Wireless Communication (OWC)** IoT networks.  
 
 
