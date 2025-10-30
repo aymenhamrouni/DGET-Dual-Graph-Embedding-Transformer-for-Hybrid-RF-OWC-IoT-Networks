@@ -3,10 +3,10 @@
 ## Overview
 This repository provides the complete, reproducible implementation accompanying the paper:  
 **“Resource Allocation in Hybrid Radio-Optical IoT Networks using GNN with Multi-task Learning.”**
-
 It implements the **Dual-Graph Embedding with Transformer (DGET)** framework for ressource allocation in a **hybrid Radio Frequency (RF)** and **Optical Wireless Communication (OWC)** IoT networks.  
-The framework integrates:
 
+
+The framework integrates:
 - A **Mixed-Integer Nonlinear Programming (MINLP)** optimization core that generates labeled scheduling datasets under realistic energy and link constraints.  
 - A **supervised multi-task deep learning model** combining transductive and inductive Graph Neural Networks (GNNs) with a Transformer encoder to learn **temporal generalization** and **cross-link prediction**.
 
@@ -66,7 +66,7 @@ The framework integrates:
 ## Model Architecture
 
 [![DGET Architecture](figures/DGET_architecture.png)](figures/DGET_architecture.pdf)  
-*Figure 1 – High-level architecture of the Dual-Graph Embedding Transformer (DGET) framework (click to open PDF).*
+*Figure 1 – High-level architecture of the Dual-Graph Embedding Transformer (DGET) framework.*
 
 ---
 
@@ -132,6 +132,7 @@ pip install -r requirements.txt
   - `SelectedTechnology` is 0 (none), 1 (RF), 2 (WOC)
   - `Label` derives from feasibility/selection combinations and is used as the training target
 
+Notes: 
 
 - `docplex` installs from pip. For large scenarios or exact solving, install IBM CPLEX and set environment variables; otherwise small/medium runs can proceed with community behavior. The community docplex package supports only small instances.
 For large-scale or exact runs, install the IBM ILOG CPLEX Optimization Studio (academic version) and set:
