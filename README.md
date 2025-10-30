@@ -5,10 +5,10 @@ This repository provides the complete, reproducible implementation accompanying 
 **“Resource Allocation in Hybrid Radio-Optical IoT Networks using GNN with Multi-task Learning.”**
 
 It implements the **Dual-Graph Embedding with Transformer (DGET)** framework for **hybrid Radio Frequency (RF)** and **Optical Wireless Communication (OWC)** IoT networks.  
-The pipeline integrates:
+The framework integrates:
 
-- A **Mixed-Integer Nonlinear Programming (MINLP)** optimization module to generate ground-truth scheduling data.  
-- A **multi-task deep learning model** combining transductive and inductive Graph Neural Networks (GNNs) with a Transformer encoder for temporal and cross-link prediction.
+- A **Mixed-Integer Nonlinear Programming (MINLP)** optimization core that generates labeled scheduling datasets under realistic energy and link constraints.  
+- A **supervised multi-task deep learning model** combining transductive and inductive Graph Neural Networks (GNNs) with a Transformer encoder to learn **temporal generalization** and **cross-link prediction**.
 
 ---
 
@@ -16,33 +16,34 @@ The pipeline integrates:
 
 ### Step 1 – Optimization and Dataset Generation
 - **Scripts:** `main.py`, `utils.py`, `MINLP_model.py`
-- **Purpose:** Solves a **bi-objective MINLP** to jointly maximize throughput and minimize delay under device energy and link availability constraints.  
-- Generates **input (`GI`)** and **recorded (`GR`)** temporal graph snapshots representing device energy, queue states, and hybrid RF–OWC link evolution.  
-- Stores labeled CSV datasets in the `dataset/` directory.
+- **Purpose:** Solves a **bi-objective MINLP** that jointly maximizes throughput and minimizes delay under device energy, queue, and link availability constraints.  
+- Generates **input graphs (`GI`)** and **recorded graphs (`GR`)** that capture temporal evolution of node energy, queue lengths, and hybrid RF–OWC link states.  
+- Stores all labeled datasets as CSV files in the `dataset/` directory.
 
 ---
 
 ### Step 2 – Dual Graph Embedding and Model Training
 - **Scripts:** `train_DGET.py`, `utils_DGET.py`
-- **Architecture:**
+- **Architecture Overview:**
   - **Transductive GNN (Link-feature-aware GAT):**  
-    Learns structural and relational embeddings from fully observed graphs, weighting neighbors by link type and importance.
+    Learns fine-grained embeddings from fully observed graphs by integrating node, edge, and link-type features.  
+    Attention weights are link-feature-dependent, capturing hybrid connectivity patterns.
   - **Inductive GNN (Edge-enhanced GraphSAGE):**  
-    Generalizes transductive embeddings to evolving graph states by aggregating decision-level and temporal information.  
-    Trained via a **consistency loss** aligning transductive and recorded embeddings.
+    Generalizes the transductive embeddings to temporally evolved graph states.  
+    It reuses the GAT’s parameters to initialize node representations and is trained using a **consistency loss** to align transductive and recorded embeddings.
   - **Transformer Encoder:**  
-    Applies multi-head self-attention across temporal embeddings to model long-range dependencies and predict per-link communication classes.
+    Applies multi-head self-attention on temporally ordered embeddings to capture long-term dependencies and predict per-link technology classes (RF / OWC / none).
 
 ---
 
 ### Step 3 – Evaluation and Visualization
 - Automatically generates:
   - ROC / AUC curves  
-  - Confusion matrices (clean and aged data)  
+  - Confusion matrices (clean and “aged” test data)  
   - Accuracy / loss curves  
   - Energy, AoI, and throughput plots  
-- Performs **post-processing correction** via a **top-2 feasibility check** ensuring valid link allocations.  
-- Saves models and plots in `/models` and `/output`.
+- Includes **post-processing correction** via a **top-2 feasibility search** ensuring physically valid link allocations.  
+- Saves model results in `/models`.
 
 ---
 
@@ -50,9 +51,9 @@ The pipeline integrates:
 
 - **Multi-task learning objective:**
   - *Classification loss* — cross-entropy with class weighting  
-  - *Consistency loss* — MSE alignment of transductive and recorded embeddings  
-- **Augmented edge labeling** and **weighted penalties** mitigate dataset imbalance.  
-- **Loss:**  
+  - *Consistency loss* — mean squared alignment of transductive and inductive embeddings  
+- **Augmented edge labeling** and **weighted penalties** mitigate class imbalance.  
+- **Final objective:**
   \[
   \mathcal{L} = \mathcal{L}_{classification} + \lambda \mathcal{L}_{consistency}
   \]
@@ -61,16 +62,17 @@ The pipeline integrates:
 
 ## Model Architecture
 
-![DGET Architecture](figures/DGET_architecture.png)
-*Figure 1 – High-level architecture of the Dual-Graph Embedding Transformer (DGET) framework.*
+[![DGET Architecture](figures/DGET_architecture.png)](figures/DGET_architecture.pdf)  
+*Figure 1 – High-level architecture of the Dual-Graph Embedding Transformer (DGET) framework (click to open PDF).*
 
+---
 
 ## Key Features
-- End-to-end **hybrid RF–OWC** simulation and graph-learning pipeline  
-- **Dual-stage embedding** (Transductive + Inductive GNN)  
+- End-to-end **hybrid RF–OWC** simulation and learning pipeline  
+- **Dual-stage embedding** with transductive and inductive GNNs  
 - **Transformer-based temporal link classifier**  
 - **Feasibility-aware post-processing correction**  
-- **Near-optimal scheduling** with significantly reduced complexity versus MINLP  
+- **Near-optimal scheduling** with substantially lower complexity than MINLP  
 
 ---
 
@@ -80,22 +82,21 @@ Install dependencies:
 ```bash
 pip install -r requirements.txt
 
-
 ```
 ## Project Structure
 ```
 .
-├── DGET_train.py
-├── DGET_utils.py
-├── MINLP_model.py
-├── constants.py
-├── data_generation.py
-├── main.py
-├── utils.py
-├── requirements.txt
+├── train_DGET.py          # DGET training, validation, and evaluation
+├── utils_DGET.py          # GNN and Transformer modules
+├── MINLP_model.py         # MINLP formulation using DOcplex
+├── constants.py           # System parameters (RF / OWC)
+├── data_generation.py     # Channel & visibility generation
+├── main.py                # Optimization and dataset driver
+├── utils.py               # MINLP simulation utilities, metrics, and plotting
+├── requirements.txt       # Python dependencies
 ├── .gitignore
-└── dataset/               # Generated at runtime 
-└── models/               # Generated at DGET training 
+├── dataset/               # Generated datasets (CSV files)
+└── models/                # Saved models and checkpoints
 ```
 ## Configuration Reference
 - `main.py`
@@ -129,8 +130,13 @@ pip install -r requirements.txt
   - `Label` derives from feasibility/selection combinations and is used as the training target
 
 
-Notes:
-- `docplex` installs from pip. For large scenarios or exact solving, install IBM CPLEX and set environment variables; otherwise small/medium runs can proceed with community behavior.
+
+.
+
+- `docplex` installs from pip. For large scenarios or exact solving, install IBM CPLEX and set environment variables; otherwise small/medium runs can proceed with community behavior. The community docplex package supports only small instances.
+For large-scale or exact runs, install the IBM ILOG CPLEX Optimization Studio (academic version) and set:
+  export CPLEX_STUDIO_DIR=/path/to/cplex
+  export PYTHONPATH=$CPLEX_STUDIO_DIR/cplex/python/3.x/x86-64_linux
 - Backend for Matplotlib is set to `TkAgg` in `main.py` and `DGET.py`. Make sure Tk is available or switch the backend if needed.
 
 
