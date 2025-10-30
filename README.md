@@ -49,7 +49,6 @@ The framework integrates:
   - Confusion matrices (clean and “aged” test data)  
   - Accuracy / loss curves  
   - Energy, AoI, and throughput plots  
-- Includes **post-processing correction** via a **top-2 feasibility search** ensuring physically valid link allocations.  
 - Saves model results in `/models`.
 
 ---
@@ -75,7 +74,6 @@ The framework integrates:
 - **Dual-stage embedding** with transductive and inductive GNNs  
 - **Transformer-based temporal link classifier**  
 - **Feasibility-aware post-processing correction**  
-- **Near-optimal scheduling** with substantially lower complexity than MINLP  
 
 ---
 
