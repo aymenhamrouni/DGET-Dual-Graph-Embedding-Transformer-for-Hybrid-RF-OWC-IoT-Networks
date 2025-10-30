@@ -1,0 +1,28 @@
+# Core numerical and data libraries
+numpy
+scipy
+pandas
+
+# Visualization
+matplotlib
+seaborn
+tikzplotlib
+
+# Machine learning
+scikit-learn
+
+# Progress bars
+tqdm
+
+# Optimization (IBM Decision Optimization)
+# Note: Some functionality may require a local IBM CPLEX installation.
+docplex
+
+# PyTorch and graph libraries
+# It is recommended to install PyTorch and PyG following their platform-specific
+# instructions first. These entries are provided for convenience and may need
+# to be adjusted to match your CUDA/CPU environment.
+torch
+torch-geometric
+torch-geometric-temporal
+torch-scatter
