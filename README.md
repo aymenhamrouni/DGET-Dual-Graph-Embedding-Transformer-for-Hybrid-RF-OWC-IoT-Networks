@@ -61,7 +61,7 @@ The pipeline integrates:
 
 ## Model Architecture
 
-![DGET Architecture](figures/dget_architecture.pdf)
+![DGET Architecture](figures/dget_architecture.png)
 *Figure 1 – High-level architecture of the Dual-Graph Embedding Transformer (DGET) framework.*
 
 
